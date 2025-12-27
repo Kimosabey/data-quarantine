@@ -45,7 +45,6 @@ class KafkaMessageProducer:
             self.producer = AIOKafkaProducer(
                 bootstrap_servers=self.bootstrap_servers,
                 acks=self.acks,  # Wait for all replicas
-                retries=self.retries,
                 enable_idempotence=True,  # Prevent duplicates
                 value_serializer=self._serialize_message
             )

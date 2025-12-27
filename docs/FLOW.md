@@ -21,43 +21,31 @@ This document traces a **single message** through the entire DataQuarantine syst
 
 ## 2. High-Level Flow Diagram
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           DATA FLOW OVERVIEW                                │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+    classDef kafka fill:#f96,stroke:#333,stroke-width:2px;
+    classDef component fill:#9cf,stroke:#333,stroke-width:2px;
+    classDef storage fill:#bfb,stroke:#333,stroke-width:2px;
 
-    Producer                 DataQuarantine              Consumers
-       │                           │                          │
-       │                           │                          │
-   ┌───▼────┐                 ┌────▼─────┐              ┌────▼─────┐
-   │ Mobile │                 │  Kafka   │              │Analytics │
-   │  App   │────────────────▶│raw-events│              │ Service  │
-   └────────┘    Publish      └────┬─────┘              └──────────┘
-                                   │                          ▲
-                                   │ Consume                  │
-                                   │                          │
-                              ┌────▼──────────┐               │
-                              │ DataQuarantine│               │
-                              │   Validator   │               │
-                              └────┬──────────┘               │
-                                   │                          │
-                        ┌──────────┴──────────┐               │
-                        │                     │               │
-                    Valid?                Invalid?            │
-                        │                     │               │
-                   ┌────▼────┐          ┌────▼─────┐         │
-                   │ Kafka   │          │  Kafka   │         │
-                   │validated│──────────│quarantine│         │
-                   │ -events │  Consume │   -dlq   │         │
-                   └─────────┘          └────┬─────┘         │
-                        │                    │               │
-                        └────────────────────┼───────────────┘
-                                             │
-                                        ┌────▼─────┐
-                                        │PostgreSQL│
-                                        │  MinIO   │
-                                        │(Metadata)│
-                                        └──────────┘
+    subgraph Producer
+        A[Mobile App]:::component -- Publish --> B((Kafka: raw-events)):::kafka
+    end
+    
+    subgraph DataQuarantine
+        B -- Consume --> C[Validator]:::component
+        C -- Valid? --> D{Decision}
+        D -- Yes --> E((Kafka: validated-events)):::kafka
+        D -- No --> F((Kafka: quarantine-dlq)):::kafka
+    end
+    
+    subgraph Consumers
+        E -- Consume --> G[Analytics Service]:::component
+    end
+    
+    subgraph Storage
+        F -- Store --> H[(MinIO)]:::storage
+        F -- Log --> I[(PostgreSQL)]:::storage
+    end
 ```
 
 ---
@@ -514,59 +502,48 @@ Same as valid flow - offset committed after successful DLQ write.
 
 ## 6. Sequence Diagram (Valid Message)
 
-```
-Producer    Kafka       Consumer    Schema      Validator   Producer    Kafka
-  │           │            │        Registry       │           │          │
-  │           │            │           │           │           │          │
-  │──Publish──▶           │           │           │           │          │
-  │           │            │           │           │           │          │
-  │           │◀──Poll─────│           │           │           │          │
-  │           │            │           │           │           │          │
-  │           │            │──Get──────▶           │           │          │
-  │           │            │         Schema        │           │          │
-  │           │            │◀──────────┘           │           │          │
-  │           │            │                       │           │          │
-  │           │            │──Validate─────────────▶           │          │
-  │           │            │                    ✅ Valid       │          │
-  │           │            │◀──────────────────────┘           │          │
-  │           │            │                                   │          │
-  │           │            │──Send─────────────────────────────▶          │
-  │           │            │                                   │          │
-  │           │            │                                   │──Write───▶
-  │           │            │                                   │          │
-  │           │            │◀──Ack─────────────────────────────┘          │
-  │           │            │                                              │
-  │           │◀──Commit───│                                              │
-  │           │  Offset    │                                              │
-  │           │            │                                              │
+```mermaid
+sequenceDiagram
+    participant P as Producer
+    participant K as Kafka
+    participant C as Consumer
+    participant S as SchemaRegistry
+    participant V as Validator
+    participant KP as KafkaProducer
+
+    P->>K: Publish (raw-events)
+    C->>K: Poll
+    K-->>C: Message Batch
+    C->>S: Get Schema
+    S-->>C: Schema Definition
+    C->>V: Validate(Message, Schema)
+    V-->>C: Valid Result
+    C->>KP: Send(validated-events)
+    KP-->>C: Ack
+    C->>K: Commit Offset
 ```
 
 ---
 
 ## 7. Sequence Diagram (Invalid Message)
 
-```
-Producer    Kafka       Consumer    Validator   Producer    DLQ      MinIO    PostgreSQL
-  │           │            │           │           │          │         │          │
-  │──Publish──▶           │           │           │          │         │          │
-  │           │            │           │           │          │         │          │
-  │           │◀──Poll─────│           │           │          │         │          │
-  │           │            │           │           │          │         │          │
-  │           │            │──Validate─▶           │          │         │          │
-  │           │            │        ❌ Invalid     │          │         │          │
-  │           │            │◀──────────┘           │          │         │          │
-  │           │            │                       │          │         │          │
-  │           │            │──Send DLQ─────────────▶          │         │          │
-  │           │            │                       │          │         │          │
-  │           │            │                       │──Write───▶         │          │
-  │           │            │                       │          │         │          │
-  │           │            │──Store────────────────────────────▶         │          │
-  │           │            │                                   │         │          │
-  │           │            │──Log Metadata─────────────────────────────────▶        │
-  │           │            │                                             │          │
-  │           │◀──Commit───│                                                        │
-  │           │  Offset    │                                                        │
-  │           │            │                                                        │
+```mermaid
+sequenceDiagram
+    participant P as Producer
+    participant K as Kafka
+    participant C as Consumer
+    participant V as Validator
+    participant KP as KafkaProducer
+    participant DB as MetadataDB
+
+    P->>K: Publish (raw-events)
+    C->>K: Poll
+    C->>V: Validate
+    V-->>C: Invalid Result
+    C->>KP: Send(quarantine-dlq)
+    KP-->>C: Ack
+    C->>DB: Log Error Metadata
+    C->>K: Commit Offset
 ```
 
 ---
@@ -575,50 +552,20 @@ Producer    Kafka       Consumer    Validator   Producer    DLQ      MinIO    Po
 
 ### Message State Machine
 
-```
-┌─────────────┐
-│  PRODUCED   │  (In raw-events topic)
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│  CONSUMED   │  (Read by DataQuarantine)
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│ VALIDATING  │  (Schema validation in progress)
-└──────┬──────┘
-       │
-       ├──────────────────┬─────────────────┐
-       │                  │                 │
-       ▼                  ▼                 ▼
-┌──────────┐      ┌──────────┐     ┌──────────┐
-│  VALID   │      │ INVALID  │     │  ERROR   │
-└────┬─────┘      └────┬─────┘     └────┬─────┘
-     │                 │                 │
-     ▼                 ▼                 ▼
-┌──────────┐      ┌──────────┐     ┌──────────┐
-│ ROUTED   │      │QUARANTINE│     │QUARANTINE│
-│(validated│      │  (DLQ)   │     │  (DLQ)   │
-│ -events) │      └────┬─────┘     └────┬─────┘
-└────┬─────┘           │                 │
-     │                 ▼                 ▼
-     │           ┌──────────┐      ┌──────────┐
-     │           │  STORED  │      │  STORED  │
-     │           │ (MinIO)  │      │ (MinIO)  │
-     │           └────┬─────┘      └────┬─────┘
-     │                │                 │
-     ▼                ▼                 ▼
-┌──────────┐      ┌──────────┐     ┌──────────┐
-│COMMITTED │      │COMMITTED │     │COMMITTED │
-│ (Offset) │      │ (Offset) │     │ (Offset) │
-└──────────┘      └────┬─────┘     └──────────┘
-                       │
-                       ▼
-                  ┌──────────┐
-                  │REPROCESS?│ (Future: Review UI)
-                  └──────────┘
+```mermaid
+stateDiagram-v2
+    [*] --> PRODUCED
+    PRODUCED --> CONSUMED
+    CONSUMED --> VALIDATING
+    VALIDATING --> VALID
+    VALIDATING --> INVALID
+    VALID --> ROUTED: validated-events
+    INVALID --> QUARANTINED: quarantine-dlq
+    ROUTED --> COMMITTED
+    QUARANTINED --> STORED: MinIO
+    STORED --> COMMITTED
+    COMMITTED --> REPROCESS_UI: Optional
+    COMMITTED --> [*]
 ```
 
 ---
@@ -798,171 +745,3 @@ Message reprocessed
 ```
 
 **Result**: At-least-once delivery, no data loss
-
----
-
-## 11. Performance Optimization Flow
-
-### Batch Processing
-
-```
-┌─────────────────────────────────────┐
-│  Kafka Consumer                     │
-│  max_poll_records = 500             │
-└──────────────┬──────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────┐
-│  Batch of 500 messages              │
-└──────────────┬──────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────┐
-│  Parallel Validation                │
-│  asyncio.gather(*validations)       │
-└──────────────┬──────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────┐
-│  Batch Results                      │
-│  - 450 valid                        │
-│  - 50 invalid                       │
-└──────────────┬──────────────────────┘
-               │
-               ├──────────────┬────────┐
-               ▼              ▼        ▼
-         Send 450       Send 50    Commit
-         to valid       to DLQ     offsets
-```
-
-**Throughput**: 500 msgs × 20 batches/sec = **10,000 msgs/sec**
-
----
-
-## 12. Monitoring Flow
-
-### Metrics Collection
-
-```
-Validation Event
-    ↓
-Emit Prometheus Metrics
-    ↓
-┌─────────────────────────────────────┐
-│ dataquarantine_records_processed    │
-│ dataquarantine_records_valid        │
-│ dataquarantine_records_invalid      │
-│ dataquarantine_validation_duration  │
-└──────────────┬──────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────┐
-│ Prometheus Scrapes (every 15s)      │
-└──────────────┬──────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────┐
-│ Grafana Visualizes                  │
-│ - Validation rate                   │
-│ - Error rate                        │
-│ - Latency percentiles               │
-└─────────────────────────────────────┘
-```
-
----
-
-## 13. Complete Flow Summary
-
-### Valid Message Journey
-
-```
-1. Producer sends to raw-events                    [5ms]
-2. Consumer polls message                          [2ms]
-3. Schema loaded (cached)                          [0.1ms]
-4. Validation passes                               [2ms]
-5. Routed to validated-events                      [5ms]
-6. Offset committed                                [2ms]
-7. Downstream consumer processes                   [varies]
-
-Total: ~16ms (p50)
-```
-
-### Invalid Message Journey
-
-```
-1. Producer sends to raw-events                    [5ms]
-2. Consumer polls message                          [2ms]
-3. Schema loaded (cached)                          [0.1ms]
-4. Validation fails                                [2ms]
-5. Routed to quarantine-dlq                        [5ms]
-6. Stored in MinIO                                 [10ms]
-7. Logged in PostgreSQL                            [5ms]
-8. Offset committed                                [2ms]
-9. Operators review in UI                          [manual]
-
-Total: ~31ms (p50)
-```
-
----
-
-## 14. Interview Demo Script
-
-**"Let me walk you through how a message flows through DataQuarantine..."**
-
-### Step 1: Show Kafka UI
-- Open http://localhost:8090
-- Show `raw-events` topic (empty)
-
-### Step 2: Send Valid Message
-- Click "Produce Message"
-- Paste valid JSON
-- Click "Produce"
-
-### Step 3: Show Validation
-- Switch to `validated-events` topic
-- Message appears within 1 second
-- "This message passed validation"
-
-### Step 4: Send Invalid Message
-- Produce message missing `user_id`
-- Switch to `quarantine-dlq` topic
-- Show error details
-
-### Step 5: Show Metrics
-- Open Prometheus: http://localhost:9090
-- Query: `dataquarantine_records_processed_total`
-- Show increasing counter
-
-**Total demo time**: 3 minutes
-
----
-
-## 15. Key Takeaways
-
-### For Interviews
-
-1. **"How does your system ensure zero data loss?"**
-   - "Offsets are only committed AFTER successful processing"
-
-2. **"What's the latency?"**
-   - "p50 is ~20ms, p99 is <50ms"
-
-3. **"How do you handle failures?"**
-   - "Fail-open strategies - pipeline continues even if storage fails"
-
-4. **"How does it scale?"**
-   - "Kafka consumer groups - add more instances, automatic rebalancing"
-
-### For Production
-
-- ✅ Every message is tracked (offset management)
-- ✅ Invalid data is preserved (DLQ pattern)
-- ✅ Full observability (metrics at every step)
-- ✅ Graceful degradation (fail-open)
-- ✅ Horizontal scalability (consumer groups)
-
----
-
-**Document Status**: ✅ Complete  
-**Last Updated**: December 27, 2025  
-**Use For**: Interviews, Debugging, Onboarding

@@ -26,40 +26,56 @@
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────┐
-│  Data Sources   │
-│ (Kafka/Kinesis) │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────────────────────────┐
-│     DataQuarantine Engine           │
-│  ┌──────────────────────────────┐   │
-│  │  Schema Validator            │   │
-│  │  - JSON Schema               │   │
-│  │  - Avro                      │   │
-│  │  - Custom Rules              │   │
-│  └──────────┬───────────────────┘   │
-│             │                        │
-│    ┌────────┴────────┐              │
-│    │                 │              │
-│    ▼                 ▼              │
-│  Valid            Invalid           │
-│  Records          Records           │
-└────┬─────────────────┬──────────────┘
-     │                 │
-     ▼                 ▼
-┌─────────┐      ┌──────────────┐
-│ Valid   │      │ Quarantine   │
-│ Stream  │      │ Storage      │
-└─────────┘      └──────┬───────┘
-                        │
-                        ▼
-                 ┌──────────────┐
-                 │ Review UI    │
-                 │ & Reprocess  │
-                 └──────────────┘
+```mermaid
+graph TD
+    classDef source fill:#f9f,stroke:#333,stroke-width:2px,color:black;
+    classDef engine fill:#bbf,stroke:#333,stroke-width:2px,color:black;
+    classDef storage fill:#bfb,stroke:#333,stroke-width:2px,color:black;
+    classDef ui fill:#fbf,stroke:#333,stroke-width:2px,color:black;
+
+    subgraph Sources [Data Sources]
+        A[Mobile App]:::source
+        B[Web API]:::source
+        C[loT Devices]:::source
+    end
+
+    subgraph Streaming [Streaming Layer]
+        D((Kafka: raw-events)):::storage
+        E((Kafka: valid-events)):::storage
+        F((Kafka: quarantine-dlq)):::storage
+    end
+
+    subgraph DataQuarantine [DataQuarantine Engine]
+        G[Validator Engine]:::engine
+        H[Schema Registry]:::engine
+    end
+
+    subgraph Storage [Storage Layer]
+        I[(PostgreSQL Metadata)]:::storage
+        J[(MinIO Quarantine)]:::storage
+    end
+
+    subgraph Frontend [User Interface]
+        K[Next.js Dashboard]:::ui
+        L[Quarantine Review]:::ui
+        M[Live Monitor]:::ui
+    end
+
+    A --> D
+    B --> D
+    C --> D
+
+    D --> G
+    G <--> H
+    G -->|Valid| E
+    G -->|Invalid| F
+
+    F --> J
+    F --> I
+
+    I --> K
+    J --> L
+    E --> M
 ```
 
 ## 📋 Use Cases
@@ -233,6 +249,7 @@ Access the **modern Next.js dashboard** at `http://localhost:3001`:
 - 📊 Interactive charts with Recharts
 - 🌙 Dark mode optimized
 - ⚡ Real-time updates
+- 📱 **Mobile Responsive**: Optimized for phones and tablets
 
 ## 🧪 Testing
 
