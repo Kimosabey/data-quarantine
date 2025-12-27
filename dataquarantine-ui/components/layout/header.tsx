@@ -9,7 +9,7 @@ export function Header() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="fixed top-0 right-0 left-64 h-16 glass-dark border-b border-white/10 px-8 flex items-center justify-between z-10"
+            className="fixed top-0 right-0 left-0 md:left-64 h-16 glass-dark border-b border-white/10 px-4 md:px-8 flex items-center justify-between z-40 transition-all duration-300"
         >
             {/* Search */}
             <div className="flex-1 max-w-xl">

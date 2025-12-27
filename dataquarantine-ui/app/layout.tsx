@@ -22,7 +22,7 @@ export default function RootLayout({
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
           <Sidebar />
           <Header />
-          <main className="ml-64 mt-16 p-8">
+          <main className="md:ml-64 ml-0 mt-16 p-6 md:p-8 transition-all duration-300">
             {children}
           </main>
         </div>

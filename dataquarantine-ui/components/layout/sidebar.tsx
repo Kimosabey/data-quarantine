@@ -22,7 +22,7 @@ export function Sidebar() {
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="fixed left-0 top-0 h-screen w-64 glass-dark border-r border-white/10 p-6"
+            className="fixed left-0 top-0 h-screen w-64 glass-dark border-r border-white/10 p-6 hidden md:block z-50"
         >
             {/* Logo */}
             <div className="mb-8">
