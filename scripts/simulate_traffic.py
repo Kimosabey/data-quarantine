@@ -80,7 +80,7 @@ def create_invalid_event():
     return event
 
 def main():
-    print(f"🚀 Starting DataQuarantine Traffic Simulation to {BOOTSTRAP_SERVERS}...")
+    print(f">> Starting DataQuarantine Traffic Simulation to {BOOTSTRAP_SERVERS}...")
     print("=" * 70)
     
     try:
@@ -88,7 +88,7 @@ def main():
             bootstrap_servers=BOOTSTRAP_SERVERS,
             value_serializer=lambda v: json.dumps(v).encode('utf-8') if isinstance(v, dict) else v.encode('utf-8')
         )
-        print("✅ Connected to Kafka! Press Ctrl+C to stop.\n")
+        print("[OK] Connected to Kafka! Press Ctrl+C to stop.\n")
         
         count = 0
         valid_count = 0
@@ -99,11 +99,11 @@ def main():
                 # 75% chance of valid data, 25% chance of invalid
                 if random.random() < 0.75:
                     event = create_valid_event()
-                    status = "✅ [VALID]"
+                    status = "[VALID]"
                     valid_count += 1
                 else:
                     event = create_invalid_event()
-                    status = "❌ [INVALID]"
+                    status = "[INVALID]"
                     invalid_count += 1
                 
                 producer.send(TOPIC_NAME, event)
@@ -117,16 +117,15 @@ def main():
                 time.sleep(0.1)
                 
         except KeyboardInterrupt:
-            print("\n" + "=" * 70)
-            print(f"🛑 Simulation stopped.")
-            print(f"📊 Final Stats:")
+            print(f"[STOP] Simulation stopped.")
+            print(f"[STATS] Final Stats:")
             print(f"   Total Sent: {count}")
             print(f"   Valid: {valid_count} ({valid_count/count*100:.1f}%)")
             print(f"   Invalid: {invalid_count} ({invalid_count/count*100:.1f}%)")
             print("=" * 70)
             
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n[ERROR] {e}")
         print("Make sure your Kafka container is running and accessible on localhost:9092")
 
 if __name__ == "__main__":

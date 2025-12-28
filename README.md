@@ -12,14 +12,14 @@
 
 ## 📚 Documentation
 
-**📖 Complete Documentation**: [14 comprehensive guides](docs/INDEX.md) covering architecture, testing, deployment, and interviews.
+**📖 Complete Documentation**: [11 essential guides](docs/INDEX.md) - clean, organized, no redundancy.
 
 ### Quick Links
-| Getting Started | Architecture | Testing & Demo |
-|----------------|--------------|----------------|
-| [⚡ 3-Step Quick Start](docs/STARTUP_GUIDE.md) | [🏗️ High-Level Design](docs/HLD.md) | [✅ Testing Checklist](docs/YOUR_CHECKLIST.md) |
-| [🚀 Detailed Setup](docs/QUICKSTART.md) | [🔧 Low-Level Design](docs/LLD.md) | [🧪 Full Test Guide](docs/TESTING_GUIDE.md) |
-| [🎨 UI Guide](docs/UI_DOCUMENTATION.md) | [📊 Data Flow](docs/FLOW.md) | [💼 Interview Prep](docs/INTERVIEW_PREP.md) |
+| Getting Started | Architecture | Testing & Interview |
+|----------------|--------------|---------------------|
+| [⚡ Quick Start (3 steps)](docs/STARTUP_GUIDE.md) | [🏗️ High-Level Design](docs/HLD.md) | [✅ Live Testing Guide](docs/LIVE_TESTING_NOW.md) |
+| [🚀 Detailed Setup](docs/QUICKSTART.md) | [🔧 Low-Level Design](docs/LLD.md) | [💼 Interview Prep](docs/INTERVIEW_PREP.md) |
+| [🎨 UI Documentation](docs/UI_DOCUMENTATION.md) | [📊 Data Flow](docs/FLOW.md) | [💰 Business Cases](docs/USE_CASES.md) |
 
 ---
 
