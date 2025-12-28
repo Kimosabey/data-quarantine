@@ -1,36 +1,40 @@
-# 🚀 DataQuarantine - Complete Startup Guide
+# 🚀 DataQuarantine - Quick Start Guide
 
-**Follow these steps to run the ENTIRE system with the beautiful Next.js UI!**
+**Get everything running in 3 simple steps!**
 
 ---
 
-## ✅ **Step 1: Install Next.js UI Dependencies**
+## ✅ **Step 1: Start Backend Services (Docker)**
+
+Open PowerShell and run:
 
 ```powershell
-# Navigate to UI directory
-cd "G:\LearningRelated\Portfolio Project\DataQuarantine\dataquarantine-ui"
-
-# Install all dependencies
-npm install
-
-# Verify installation
-npm list framer-motion
+cd "G:\LearningRelated\Portfolio Project\DataQuarantine"
+docker-compose up -d
 ```
 
-**Expected**: Should show framer-motion installed
+**Wait 30 seconds** for all services to initialize.
+
+**Verify**:
+```powershell
+docker-compose ps
+# All services should show "Up" or "healthy"
+```
 
 ---
 
-## ✅ **Step 2: Start Next.js UI (Development)**
+## ✅ **Step 2: Start Frontend UI (Local Development)**
+
+In a **new terminal**:
 
 ```powershell
-# Still in dataquarantine-ui directory
+cd "G:\LearningRelated\Portfolio Project\DataQuarantine\dataquarantine-ui"
 npm run dev
 ```
 
 **Expected Output**:
 ```
-▲ Next.js 16.1.1
+▲ Next.js 16.1.1 (Turbopack)
 - Local:        http://localhost:3000
 ```
 
@@ -40,9 +44,9 @@ npm run dev
 
 ---
 
-## ✅ **Step 3: Start Docker Services (New Terminal)**
+## ✅ **Step 3: Run Traffic Simulation**
 
-Open a **NEW PowerShell terminal**:
+In a **third terminal**:
 
 ```powershell
 # Navigate to project root

@@ -314,13 +314,36 @@ DataQuarantine/
 
 ---
 
-## 🚀 **NEXT STEPS**
+## 🚀 **DEPLOYMENT GUIDE**
 
-### **Deployment**
-1. ✅ Run `npm run dev` in dataquarantine-ui
-2. ✅ Open http://localhost:3000
-3. ✅ Take screenshots
-4. ✅ Record demo video
+### **Development Mode** (Recommended for demos)
+
+**Backend Services** (Docker):
+```powershell
+cd "G:\LearningRelated\Portfolio Project\DataQuarantine"
+docker-compose up -d
+```
+
+**Frontend UI** (Local - faster hot reload):
+```powershell
+cd dataquarantine-ui
+npm run dev
+# Opens at http://localhost:3000
+```
+
+**Traffic Simulation**:
+```powershell
+python scripts/simulate_traffic.py
+# Press Ctrl+C to stop
+```
+
+### **Production Mode** (Optional)
+
+Build and deploy the UI in Docker by uncommenting the `ui` service in `docker-compose.yml` and running:
+```powershell
+docker-compose up -d --build
+```
+
 
 ### **This Week**
 1. Push to GitHub
