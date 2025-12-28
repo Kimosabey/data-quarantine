@@ -34,9 +34,9 @@ DataQuarantine now includes a **stunning, modern Next.js dashboard** with:
 
 | Service | Port | URL | Purpose |
 |---------|------|-----|---------|
-| **🎨 Next.js UI** | 3001 | http://localhost:3001 | **Modern Dashboard** |
+| **🎨 Next.js UI** | 3000 | http://localhost:3000 | **Modern Dashboard** |
 | **🎯 Kafka UI** | 8090 | http://localhost:8090 | Kafka Management |
-| **📊 Grafana** | 3000 | http://localhost:3000 | Metrics (admin/admin) |
+| **📊 Grafana** | 3001 | http://localhost:3001 | Metrics (admin/admin) |
 | **📦 MinIO** | 9001 | http://localhost:9001 | Storage (minioadmin/minioadmin) |
 | **🔍 Prometheus** | 9090 | http://localhost:9090 | Raw Metrics |
 | **🚀 API** | 8080 | http://localhost:8080 | Backend API |

@@ -71,7 +71,7 @@ dataquarantine-grafana        Up
 ---
 
 ### 🎨 Next.js Dashboard (Modern UI!)
-- **URL**: http://localhost:3001
+- **URL**: http://localhost:3000
 - **Purpose**: Beautiful, animated dashboard for monitoring and management
 - **Features**:
   - Real-time metrics with animated charts
@@ -94,7 +94,7 @@ dataquarantine-grafana        Up
 ---
 
 ### 📊 Grafana (Metrics Dashboard)
-- **URL**: http://localhost:3000
+- **URL**: http://localhost:3001
 - **Username**: `admin`
 - **Password**: `admin`
 - **Purpose**: Visualize validation metrics
@@ -443,9 +443,9 @@ docker-compose down -v
 
 | Service | Port | URL | Purpose |
 |---------|------|-----|---------|
-| **Next.js UI** | 3001 | http://localhost:3001 | 🎨 **Modern Dashboard** - Animated UI |
+| **Next.js UI** | 3000 | http://localhost:3000 | 🎨 **Modern Dashboard** - Animated UI |
 | **Kafka UI** | 8090 | http://localhost:8090 | 🎯 **Kafka Management** - Topics & Messages |
-| **Grafana** | 3000 | http://localhost:3000 | 📊 Metrics dashboards |
+| **Grafana** | 3001 | http://localhost:3001 | 📊 Metrics dashboards |
 | **MinIO Console** | 9001 | http://localhost:9001 | 📦 Object storage |
 | **Prometheus** | 9090 | http://localhost:9090 | 🔍 Raw metrics |
 | **DataQuarantine API** | 8080 | http://localhost:8080 | 🚀 Validator service |
@@ -459,7 +459,7 @@ docker-compose down -v
 
 **"Let me show you DataQuarantine in action..."**
 
-1. **Open Next.js Dashboard**: http://localhost:3001
+1. **Open Next.js Dashboard**: http://localhost:3000
    - "This is the modern dashboard I built with Next.js, TypeScript, and Framer Motion"
    - Show animated stat cards with gradients
    - "Real-time metrics with glassmorphism design"
@@ -511,5 +511,5 @@ docker-compose down -v
 
 **🎉 You're ready to go!**
 
-**Start with the Next.js Dashboard**: http://localhost:3001  
+**Start with the Next.js Dashboard**: http://localhost:3000  
 **Or use Kafka UI**: http://localhost:8090
