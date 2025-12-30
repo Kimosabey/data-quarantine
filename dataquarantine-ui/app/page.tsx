@@ -58,25 +58,28 @@ export default function DashboardPage() {
         className="flex items-end justify-between"
       >
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground mb-1">Overview</h1>
+          <h1 className="text-4xl font-black tracking-tight text-foreground mb-1">Overview</h1>
           <p className="text-muted-foreground font-medium">System performance and data validation metrics.</p>
         </div>
         <div className="flex gap-2">
-          <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            System Live
-          </span>
+          <div className="px-5 py-2.5 rounded-2xl neu-flat flex items-center gap-2">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-gradient-to-br from-green-400 to-emerald-600"></span>
+            </span>
+            <span className="text-sm font-bold text-foreground">System Live</span>
+          </div>
         </div>
       </motion.div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Processed"
           value={formatNumber(data.total_processed)}
           change={12.5}
           trend="up"
-          icon={<Activity className="w-5 h-5" />}
+          icon={<Activity className="w-6 h-6" />}
           colorClass="text-blue-600"
           bgClass="bg-blue-50"
           delay={0}
@@ -87,7 +90,7 @@ export default function DashboardPage() {
           value={formatNumber(data.total_valid)}
           change={8.3}
           trend="up"
-          icon={<CheckCircle className="w-5 h-5" />}
+          icon={<CheckCircle className="w-6 h-6" />}
           colorClass="text-emerald-600"
           bgClass="bg-emerald-50"
           delay={0.1}
@@ -98,7 +101,7 @@ export default function DashboardPage() {
           value={formatNumber(data.total_invalid)}
           change={-2.1}
           trend="down"
-          icon={<ShieldAlert className="w-5 h-5" />}
+          icon={<ShieldAlert className="w-6 h-6" />}
           colorClass="text-rose-600"
           bgClass="bg-rose-50"
           delay={0.2}
@@ -109,7 +112,7 @@ export default function DashboardPage() {
           value={`${formatNumber(data.throughput)}/s`}
           change={15.7}
           trend="up"
-          icon={<Zap className="w-5 h-5" />}
+          icon={<Zap className="w-6 h-6" />}
           colorClass="text-violet-600"
           bgClass="bg-violet-50"
           delay={0.3}
@@ -117,14 +120,14 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
           {/* Main Validation Chart */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="rounded-2xl border border-border bg-card shadow-sm p-1"
+            className="rounded-[2.5rem] neu-flat p-2"
           >
             <ValidationChart data={mockChartData} />
           </motion.div>
@@ -134,36 +137,36 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="rounded-2xl border border-border bg-card shadow-sm p-6"
+            className="rounded-[2rem] neu-flat p-8"
           >
-            <h3 className="text-base font-semibold text-foreground mb-5">Validation Health</h3>
-            <div className="space-y-6">
+            <h3 className="text-lg font-bold text-foreground mb-6">Validation Health</h3>
+            <div className="space-y-8">
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">Valid Messages</span>
-                  <span className="text-sm font-bold text-emerald-600">{validPercentage}%</span>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-bold text-muted-foreground uppercase tracking-wide">Valid Messages</span>
+                  <span className="text-lg font-black text-emerald-600">{validPercentage}%</span>
                 </div>
-                <div className="h-2.5 bg-secondary rounded-full overflow-hidden">
+                <div className="h-5 neu-pressed rounded-full overflow-hidden p-1">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${validPercentage}%` }}
                     transition={{ duration: 1, delay: 0.5 }}
-                    className="h-full bg-emerald-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full shadow-sm"
                   />
                 </div>
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">Quarantined Messages</span>
-                  <span className="text-sm font-bold text-rose-600">{invalidPercentage}%</span>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-bold text-muted-foreground uppercase tracking-wide">Quarantined Messages</span>
+                  <span className="text-lg font-black text-rose-600">{invalidPercentage}%</span>
                 </div>
-                <div className="h-2.5 bg-secondary rounded-full overflow-hidden">
+                <div className="h-5 neu-pressed rounded-full overflow-hidden p-1">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${invalidPercentage}%` }}
                     transition={{ duration: 1, delay: 0.6 }}
-                    className="h-full bg-rose-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-rose-400 to-pink-500 rounded-full shadow-sm"
                   />
                 </div>
               </div>
@@ -171,7 +174,7 @@ export default function DashboardPage() {
           </motion.div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-8">
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -185,14 +188,14 @@ export default function DashboardPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.7 }}
-            className="rounded-2xl border border-border bg-card shadow-sm p-6"
+            className="rounded-[2rem] neu-flat p-8"
           >
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-base font-semibold text-foreground">System Status</h3>
-              <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-secondary text-muted-foreground uppercase">Real-time</div>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold text-foreground">System Status</h3>
+              <div className="px-3 py-1 rounded-xl neu-pressed text-[10px] font-bold text-primary uppercase">Real-time</div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {[
                 { name: 'Kafka Consumer', status: 'healthy', icon: Server, color: "text-orange-500" },
                 { name: 'Schema Registry', status: 'healthy', icon: Database, color: "text-blue-500" },
@@ -201,21 +204,15 @@ export default function DashboardPage() {
               ].map((service, index) => (
                 <div
                   key={service.name}
-                  className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border/50 hover:bg-secondary/60 transition-colors"
+                  className="flex items-center justify-between p-4 rounded-2xl neu-flat hover:scale-[1.02] transition-transform"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className={`p-1.5 rounded-lg bg-card ${service.color} shadow-sm`}>
-                      <service.icon className="w-3.5 h-3.5" />
+                  <div className="flex items-center gap-4">
+                    <div className={`p-2.5 rounded-xl neu-pressed ${service.color}`}>
+                      <service.icon className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-medium text-foreground">{service.name}</span>
+                    <span className="text-sm font-bold text-foreground">{service.name}</span>
                   </div>
-                  <div className="flex items-center gap-2 px-2 py-1 rounded-md bg-green-500/10 border border-green-500/20">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </span>
-                    <span className="text-[10px] font-bold text-green-700 uppercase tracking-wide">Operational</span>
-                  </div>
+                  <div className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 shadow-md shadow-green-400/50"></div>
                 </div>
               ))}
             </div>

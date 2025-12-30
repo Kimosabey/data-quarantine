@@ -35,17 +35,17 @@ export default function QuarantinePage() {
                 className="flex items-end justify-between"
             >
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground mb-1">Quarantine</h1>
+                    <h1 className="text-4xl font-black tracking-tight text-foreground mb-1">Quarantine</h1>
                     <p className="text-muted-foreground font-medium">Review and resolve blocked messages.</p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <button className="px-4 py-2 rounded-xl bg-card border border-border hover:bg-secondary text-foreground text-sm font-medium flex items-center gap-2 transition-colors shadow-sm">
+                <div className="flex items-center gap-4">
+                    <button className="flex items-center gap-2 px-5 py-2.5 rounded-2xl neu-flat hover:text-primary transition-all font-bold text-sm text-muted-foreground">
                         <Download className="w-4 h-4" />
                         Export
                     </button>
 
-                    <button className="px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium flex items-center gap-2 shadow-md transition-all active:scale-95">
+                    <button className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-primary text-white shadow-lg shadow-primary/30 hover:scale-105 transition-all font-bold text-sm active:scale-95">
                         <RefreshCw className="w-4 h-4" />
                         Refresh
                     </button>
@@ -57,38 +57,48 @@ export default function QuarantinePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-card rounded-2xl border border-border shadow-sm p-4 md:p-6"
+                className="neu-flat rounded-[2rem] p-6 lg:p-8"
             >
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                     <div className="md:col-span-5 relative group">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                         <input
                             type="text"
                             placeholder="Search by ID, error, or schema..."
-                            className="w-full pl-10 pr-4 py-2.5 bg-secondary/30 border border-transparent hover:border-border focus:bg-background focus:border-ring rounded-xl text-sm transition-all outline-none"
+                            className="w-full pl-12 pr-4 h-12 neu-pressed rounded-2xl text-sm font-medium focus:outline-none transition-all placeholder:text-muted-foreground/50 bg-transparent"
                         />
                     </div>
 
                     <div className="md:col-span-3">
-                        <select className="w-full px-4 py-2.5 bg-secondary/30 border border-transparent hover:border-border focus:bg-background focus:border-ring rounded-xl text-sm transition-all outline-none cursor-pointer">
-                            <option>All Topics</option>
-                            <option>raw-events</option>
-                            <option>user-events</option>
-                        </select>
+                        <div className="relative">
+                            <select className="w-full h-12 px-4 neu-pressed rounded-2xl text-sm font-bold text-foreground focus:outline-none appearance-none bg-transparent cursor-pointer">
+                                <option>All Topics</option>
+                                <option>raw-events</option>
+                                <option>user-events</option>
+                            </select>
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                                <Filter className="w-4 h-4" />
+                            </div>
+                        </div>
                     </div>
 
                     <div className="md:col-span-3">
-                        <select className="w-full px-4 py-2.5 bg-secondary/30 border border-transparent hover:border-border focus:bg-background focus:border-ring rounded-xl text-sm transition-all outline-none cursor-pointer">
-                            <option>All Error Types</option>
-                            <option>schema_violation</option>
-                            <option>missing_field</option>
-                            <option>invalid_format</option>
-                        </select>
+                        <div className="relative">
+                            <select className="w-full h-12 px-4 neu-pressed rounded-2xl text-sm font-bold text-foreground focus:outline-none appearance-none bg-transparent cursor-pointer">
+                                <option>All Error Types</option>
+                                <option>schema_violation</option>
+                                <option>missing_field</option>
+                                <option>invalid_format</option>
+                            </select>
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                                <Filter className="w-4 h-4" />
+                            </div>
+                        </div>
                     </div>
 
                     <div className="md:col-span-1">
-                        <button className="w-full h-full px-4 py-2.5 bg-secondary/30 hover:bg-secondary border border-transparent rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground transition-all">
-                            <Filter className="w-4 h-4" />
+                        <button className="w-full h-12 neu-icon-btn rounded-2xl text-muted-foreground hover:text-primary transition-all">
+                            <Filter className="w-5 h-5" />
                         </button>
                     </div>
                 </div>
@@ -99,22 +109,22 @@ export default function QuarantinePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden"
+                className="neu-flat rounded-[2.5rem] p-2 overflow-hidden"
             >
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto rounded-[2rem]">
                     <table className="w-full whitespace-nowrap">
                         <thead className="bg-secondary/30">
                             <tr>
                                 {[
                                     'ID', 'Topic', 'Schema', 'Error Type', 'Error Message', 'Time', 'Actions'
                                 ].map((header) => (
-                                    <th key={header} className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                    <th key={header} className="px-8 py-5 text-left text-xs font-black text-muted-foreground/70 uppercase tracking-wider">
                                         {header}
                                     </th>
                                 ))}
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-border">
+                        <tbody className="divide-y divide-border/50">
                             {mockQuarantineRecords.map((record, index) => {
                                 const errorConfig = errorTypeConfig[record.error_type as keyof typeof errorTypeConfig] || errorTypeConfig.schema_violation;
                                 const ErrorIcon = errorConfig.icon;
@@ -122,31 +132,31 @@ export default function QuarantinePage() {
                                 return (
                                     <tr
                                         key={record.id}
-                                        className="hover:bg-muted/50 transition-colors group"
+                                        className="hover:bg-primary/5 transition-colors group"
                                     >
-                                        <td className="px-6 py-4 text-sm font-mono text-muted-foreground group-hover:text-foreground transition-colors">
+                                        <td className="px-8 py-5 text-sm font-mono font-bold text-foreground">
                                             {record.id}
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-foreground font-medium">
+                                        <td className="px-8 py-5 text-sm text-foreground font-semibold">
                                             {record.topic}
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-muted-foreground">
-                                            {record.schema_name} <span className="text-xs bg-secondary px-1.5 py-0.5 rounded text-foreground">v{record.schema_version}</span>
+                                        <td className="px-8 py-5 text-sm text-muted-foreground font-medium">
+                                            {record.schema_name} <span className="text-[10px] font-bold bg-secondary px-2 py-1 rounded-lg text-foreground ml-2">v{record.schema_version}</span>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border ${errorConfig.color}`}>
-                                                <ErrorIcon className="w-3 h-3" />
+                                        <td className="px-8 py-5">
+                                            <div className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-xl neu-pressed ${errorConfig.color.replace('bg-', 'text-').split(' ')[0]}`}>
+                                                <ErrorIcon className="w-3.5 h-3.5" />
                                                 {record.error_type.replace('_', ' ')}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-foreground max-w-xs truncate font-medium">
+                                        <td className="px-8 py-5 text-sm text-foreground max-w-xs truncate font-medium">
                                             {record.error_message}
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                                        <td className="px-8 py-5 text-sm text-muted-foreground font-medium">
                                             {formatDistanceToNow(new Date(record.created_at), { addSuffix: true })}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <button className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
+                                        <td className="px-8 py-5">
+                                            <button className="neu-icon-btn w-9 h-9 text-muted-foreground hover:text-primary">
                                                 <Eye className="w-4 h-4" />
                                             </button>
                                         </td>
@@ -158,26 +168,26 @@ export default function QuarantinePage() {
                 </div>
 
                 {/* Pagination */}
-                <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-secondary/10">
-                    <p className="text-sm text-muted-foreground font-medium">
-                        Showing <span className="text-foreground">1</span> to <span className="text-foreground">10</span> of <span className="text-foreground">12,222</span> results
+                <div className="px-8 py-6 border-t border-border/20 flex items-center justify-between">
+                    <p className="text-sm font-bold text-muted-foreground">
+                        Showing <span className="text-foreground">1-10</span> of <span className="text-foreground">12.2k</span>
                     </p>
-                    <div className="flex items-center gap-2">
-                        <button className="px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-secondary text-sm font-medium text-foreground transition-colors disabled:opacity-50">
+                    <div className="flex items-center gap-3">
+                        <button className="px-4 py-2 rounded-xl neu-flat hover:text-primary text-sm font-bold text-muted-foreground transition-all disabled:opacity-50">
                             Previous
                         </button>
-                        <div className="flex gap-1">
-                            <button className="w-8 h-8 rounded-lg bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center shadow-sm">
+                        <div className="flex gap-2">
+                            <button className="w-9 h-9 rounded-xl bg-primary text-white shadow-lg shadow-primary/30 text-sm font-bold flex items-center justify-center">
                                 1
                             </button>
-                            <button className="w-8 h-8 rounded-lg text-foreground hover:bg-secondary text-sm font-medium flex items-center justify-center transition-colors">
+                            <button className="w-9 h-9 rounded-xl neu-flat hover:text-primary text-sm font-bold flex items-center justify-center text-muted-foreground transition-all">
                                 2
                             </button>
-                            <button className="w-8 h-8 rounded-lg text-foreground hover:bg-secondary text-sm font-medium flex items-center justify-center transition-colors">
+                            <button className="w-9 h-9 rounded-xl neu-flat hover:text-primary text-sm font-bold flex items-center justify-center text-muted-foreground transition-all">
                                 3
                             </button>
                         </div>
-                        <button className="px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-secondary text-sm font-medium text-foreground transition-colors">
+                        <button className="px-4 py-2 rounded-xl neu-flat hover:text-primary text-sm font-bold text-muted-foreground transition-all">
                             Next
                         </button>
                     </div>

@@ -31,24 +31,24 @@ export function Sidebar() {
             className="fixed left-0 top-0 h-screen w-64 bg-card border-r border-border hidden md:flex flex-col z-50 shadow-sm"
         >
             {/* Logo Area */}
-            <div className="p-6 pb-8 border-b border-border/40">
-                <Link href="/" className="flex items-center gap-3 group">
-                    <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
-                        <ShieldCheck className="w-6 h-6" strokeWidth={2.5} />
+            <div className="p-6 pb-8">
+                <Link href="/" className="flex items-center gap-4 group">
+                    <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-lg shadow-violet-500/30 transition-transform group-hover:scale-105 active:scale-95">
+                        <ShieldCheck className="w-7 h-7" strokeWidth={2.5} />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-bold text-lg tracking-tight text-foreground leading-none">
+                        <span className="font-bold text-xl tracking-tight text-foreground leading-none">
                             DataQuarantine
                         </span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mt-1">
-                            Schema Enforcer
+                        <span className="text-[10px] uppercase tracking-wider font-extrabold text-primary mt-1">
+                            Soft UI Edition
                         </span>
                     </div>
                 </Link>
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+            <nav className="flex-1 px-4 py-6 space-y-3 overflow-y-auto">
                 {navigation.map((item) => {
                     const isActive = pathname === item.href
                     const Icon = item.icon
@@ -58,22 +58,18 @@ export function Sidebar() {
                             key={item.name}
                             href={item.href}
                             className={cn(
-                                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group relative',
+                                'flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-300 group relative',
                                 isActive
-                                    ? 'text-primary bg-primary/10'
-                                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                                    ? 'neu-pressed text-primary'
+                                    : 'text-muted-foreground hover:text-foreground hover:neu-convex'
                             )}
                         >
-                            {isActive && (
-                                <motion.div
-                                    layoutId="sidebar-active"
-                                    className="absolute left-0 w-1 h-6 bg-primary rounded-r-full"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 0.2 }}
-                                />
-                            )}
-                            <Icon className={cn("w-5 h-5", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+                            <div className={cn(
+                                "p-2 rounded-xl transition-colors duration-300",
+                                isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary"
+                            )}>
+                                <Icon className="w-5 h-5" />
+                            </div>
                             <span>{item.name}</span>
                         </Link>
                     )
@@ -81,17 +77,17 @@ export function Sidebar() {
             </nav>
 
             {/* User / Status */}
-            <div className="p-4 border-t border-border/40">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50 border border-border/50">
+            <div className="p-4">
+                <div className="flex items-center gap-3 p-4 rounded-2xl neu-convex">
                     <div className="relative">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-300 flex items-center justify-center text-white font-bold text-xs shadow-md">
                             AD
                         </div>
-                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></span>
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-foreground">Admin User</span>
-                        <span className="text-xs text-muted-foreground">Connected</span>
+                        <span className="text-sm font-bold text-foreground">Admin User</span>
+                        <span className="text-xs text-muted-foreground font-medium">Connected</span>
                     </div>
                 </div>
             </div>

@@ -30,38 +30,52 @@ export function StatCard({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay }}
-            className="group relative overflow-hidden rounded-2xl bg-card border border-border shadow-sm p-6 hover:shadow-md transition-all duration-300"
+            className="group relative overflow-hidden rounded-[2rem] neu-flat p-7 transition-all duration-300 hover:-translate-y-1"
         >
             <div className="flex items-start justify-between">
                 <div>
-                    <h3 className="text-sm font-medium text-muted-foreground mb-1">{title}</h3>
+                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">{title}</h3>
                     <motion.div
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.4, delay: delay + 0.1 }}
-                        className="text-3xl font-bold text-foreground tracking-tight"
+                        className="text-4xl font-black text-foreground tracking-tight"
                     >
-                        {value}
+                        {typeof value === 'string' && value.endsWith('/s') ? (
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">{value}</span>
+                        ) : (
+                            <span className={`bg-clip-text text-transparent bg-gradient-to-br ${colorClass.replace('text-', 'from-').replace('600', '500')} to-foreground`}>
+                                {value}
+                            </span>
+                        )}
                     </motion.div>
                 </div>
-                <div className={cn("p-3 rounded-xl transition-transform group-hover:scale-110 duration-500", bgClass, colorClass)}>
+                <div className={cn(
+                    "p-3.5 rounded-2xl shadow-lg transition-transform group-hover:scale-110 duration-500 text-white",
+                    // Convert basic bg colors to vibrant gradients matching the textual color intent
+                    colorClass.includes('blue') ? 'bg-gradient-to-br from-blue-400 to-cyan-500 shadow-blue-400/40' :
+                        colorClass.includes('emerald') ? 'bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-400/40' :
+                            colorClass.includes('rose') ? 'bg-gradient-to-br from-rose-400 to-pink-500 shadow-rose-400/40' :
+                                colorClass.includes('violet') ? 'bg-gradient-to-br from-violet-400 to-purple-500 shadow-violet-400/40' :
+                                    'bg-slate-100'
+                )}>
                     {icon}
                 </div>
             </div>
 
-            <div className="mt-4 flex items-center gap-2">
+            <div className="mt-6 flex items-center gap-3">
                 {change !== undefined && (
                     <div className={cn(
-                        "flex items-center gap-0.5 text-xs font-semibold px-2 py-0.5 rounded-full",
-                        trend === 'up' ? "text-green-600 bg-green-100" :
-                            trend === 'down' ? "text-red-600 bg-red-100" : "text-gray-600 bg-gray-100"
+                        "flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-xl neu-pressed",
+                        trend === 'up' ? "text-emerald-500" :
+                            trend === 'down' ? "text-rose-500" : "text-slate-500"
                     )}>
-                        {trend === 'up' ? <ArrowUp className="w-3 h-3" /> :
-                            trend === 'down' ? <ArrowDown className="w-3 h-3" /> : <Minus className="w-3 h-3" />}
+                        {trend === 'up' ? <ArrowUp className="w-3.5 h-3.5" /> :
+                            trend === 'down' ? <ArrowDown className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
                         <span>{Math.abs(change)}%</span>
                     </div>
                 )}
-                <span className="text-xs text-muted-foreground">vs last hour</span>
+                <span className="text-xs font-medium text-muted-foreground/80">vs last hour</span>
             </div>
         </motion.div>
     )

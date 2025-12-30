@@ -5,40 +5,45 @@ import { Bell, Search, Command, HelpCircle } from 'lucide-react'
 
 export function Header() {
     return (
-        <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-border/50">
-            <div className="flex h-16 items-center gap-4 px-6 md:px-8">
+        <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-sm pt-4 px-6 md:px-8 pb-2">
+            <div className="flex h-16 items-center gap-4">
 
-                {/* Search Bar - Modern "Command" style */}
+                {/* Search Bar - Neumorphic Pressed/Inset */}
                 <div className="flex-1 flex justify-center md:justify-start">
                     <div className="relative group w-full max-w-md">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
                             <Search className="w-4 h-4" />
                         </div>
                         <input
                             type="text"
                             placeholder="Search events, schemas, logs..."
-                            className="w-full h-10 pl-10 pr-12 bg-secondary/50 border-none rounded-full text-sm focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-muted-foreground/70"
+                            className="w-full h-12 pl-12 pr-14 neu-pressed rounded-2xl text-sm focus:outline-none transition-all font-bold text-foreground placeholder:text-muted-foreground/60"
                         />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-                                <span className="text-xs">⌘</span>K
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                            <kbd className="hidden md:inline-flex h-6 items-center gap-1 rounded-lg border border-transparent bg-transparent font-mono text-xs font-bold text-muted-foreground/50">
+                                ⌘K
                             </kbd>
                         </div>
                     </div>
                 </div>
 
-                {/* Right Actions */}
-                <div className="flex items-center gap-3">
-                    <button className="p-2 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">
+                {/* Right Actions - Neumorphic Flat Buttons */}
+                <div className="flex items-center gap-4">
+                    <button className="neu-icon-btn w-11 h-11 text-muted-foreground">
                         <HelpCircle className="w-5 h-5" />
                     </button>
 
-                    <button className="relative p-2 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors group">
-                        <Bell className="w-5 h-5 group-hover:animate-swing" />
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-background"></span>
+                    <button className="neu-icon-btn w-11 h-11 text-muted-foreground relative group">
+                        <Bell className="w-5 h-5 group-hover:text-primary transition-colors" />
+                        <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border border-background shadow-sm"></span>
                     </button>
 
-                    <div className="h-8 w-[1px] bg-border mx-1 hidden md:block"></div>
+                    <div className="pl-2">
+                        <button className="h-11 px-4 neu-flat rounded-xl flex items-center gap-2 text-sm font-bold text-foreground hover:text-primary transition-all">
+                            <Command className="w-4 h-4" />
+                            <span>Actions</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
