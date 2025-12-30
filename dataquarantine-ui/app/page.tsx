@@ -1,35 +1,48 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Activity, CheckCircle, ShieldAlert, Zap, Server, Database, HardDrive, Cpu } from 'lucide-react'
+import { Activity, CheckCircle, ShieldAlert, Zap, Server, Database, HardDrive, Cpu, Loader2 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { ErrorBreakdown } from '@/components/dashboard/error-breakdown'
 import { ValidationChart } from '@/components/dashboard/validation-chart'
 import { formatNumber } from '@/lib/utils'
 import { fetchMetrics, SystemMetrics } from '@/lib/api'
 
-// Mock chart data - Backend does not yet support time-series history
-const mockChartData = Array.from({ length: 24 }, (_, i) => ({
-  time: `${i}:00`,
-  valid: Math.floor(Math.random() * 5000) + 3000,
-  invalid: Math.floor(Math.random() * 500) + 100,
-}))
-
 export default function DashboardPage() {
-  const [metrics, setMetrics] = useState<SystemMetrics | null>(null)
+  const [chartData, setChartData] = useState<Array<{ time: string; valid: number; invalid: number }>>([])
+  const lastMetricsRef = useRef<SystemMetrics | null>(null)
 
+  const { data: metrics, isLoading } = useQuery({
+    queryKey: ['metrics'],
+    queryFn: fetchMetrics,
+    refetchInterval: 2000,
+  })
+
+  // Calculate real-time traffic (deltas) for the chart
   useEffect(() => {
-    // Initial fetch
-    fetchMetrics().then(setMetrics).catch(console.error)
+    if (!metrics) return
 
-    // Poll every 5 seconds
-    const interval = setInterval(() => {
-      fetchMetrics().then(setMetrics).catch(console.error)
-    }, 5000)
+    const now = new Date()
+    const timeLabel = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
-    return () => clearInterval(interval)
-  }, [])
+    let validDelta = 0
+    let invalidDelta = 0
+
+    if (lastMetricsRef.current) {
+      // Calculate instantaneous rate (events per fetch interval, approx 2s)
+      validDelta = Math.max(0, metrics.total_valid - lastMetricsRef.current.total_valid)
+      invalidDelta = Math.max(0, metrics.total_invalid - lastMetricsRef.current.total_invalid)
+    }
+
+    setChartData(prev => {
+      const newData = [...prev, { time: timeLabel, valid: validDelta, invalid: invalidDelta }]
+      return newData.slice(-20) // Keep last 20 points for a moving window
+    })
+
+    lastMetricsRef.current = metrics
+  }, [metrics])
 
   const data = metrics || {
     total_processed: 0,
@@ -37,7 +50,7 @@ export default function DashboardPage() {
     total_invalid: 0,
     validation_rate: 0,
     throughput: 0,
-    error_breakdown: { 'system_initializing': 1 }
+    error_breakdown: {}
   }
 
   const validPercentage = data.total_processed > 0
@@ -47,6 +60,14 @@ export default function DashboardPage() {
   const invalidPercentage = data.total_processed > 0
     ? ((data.total_invalid / data.total_processed) * 100).toFixed(2)
     : "0.00"
+
+  if (isLoading && !metrics) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8 pb-10">
@@ -129,7 +150,7 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="rounded-[2.5rem] neu-flat p-2"
           >
-            <ValidationChart data={mockChartData} />
+            <ValidationChart data={chartData} />
           </motion.div>
 
           {/* Progress Bars */}
@@ -180,7 +201,8 @@ export default function DashboardPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <ErrorBreakdown data={data.error_breakdown} />
+            {/* Pass clean data to breakdown */}
+            <ErrorBreakdown data={data.error_breakdown || {}} />
           </motion.div>
 
           {/* System Status */}

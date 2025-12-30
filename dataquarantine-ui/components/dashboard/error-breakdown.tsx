@@ -17,6 +17,10 @@ const COLORS = [
     '#ec4899', // pink-500
 ]
 
+import { CheckCircle2 } from 'lucide-react'
+
+// ...
+
 export function ErrorBreakdown({ data }: ErrorBreakdownProps) {
     const chartData = Object.entries(data).map(([name, value]) => ({
         name: name.replace('_', ' '),
@@ -28,8 +32,8 @@ export function ErrorBreakdown({ data }: ErrorBreakdownProps) {
     if (total === 0) {
         return (
             <div className="rounded-[2.5rem] neu-flat p-8 h-full flex flex-col items-center justify-center text-muted-foreground space-y-4">
-                <div className="p-4 rounded-full neu-pressed">
-                    <span className="text-2xl">🎉</span>
+                <div className="p-4 rounded-full neu-pressed text-emerald-500">
+                    <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <p className="font-bold">No errors detected</p>
             </div>

@@ -164,11 +164,29 @@
     background: linear-gradient(145deg, #2a2e36, #22252c);
   }
 
+  /* Fix: Define properties explicitly instead of using @apply for custom utility to avoid build error */
   .neu-icon-btn {
-    @apply flex items-center justify-center rounded-2xl neu-flat hover:text-primary transition-all active:scale-95 text-muted-foreground cursor-pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    /* rounded-2xl */
+    background: var(--card);
+    /* neu-flat background */
+    box-shadow: var(--shadow-dark), var(--shadow-light);
+    /* neu-flat shadows */
+    border: none;
+    color: hsl(var(--muted-foreground));
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .neu-icon-btn:hover {
+    color: hsl(var(--primary));
   }
 
   .neu-icon-btn:active {
+    transform: scale(0.95);
     box-shadow: var(--shadow-inset-dark), var(--shadow-inset-light);
   }
 }
