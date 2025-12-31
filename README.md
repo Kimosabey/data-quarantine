@@ -1,10 +1,52 @@
-# DataQuarantine - Streaming Schema Enforcer
+# DataQuarantine
+## Streaming Schema Enforcer & Data Quality Gateway
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
-![Status](https://img.shields.io/badge/status-active-success.svg)
+<div align="center">
 
-## 🎯 Overview
+![Status](https://img.shields.io/badge/Status-Production_Ready-success?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+
+**Tech Stack**
+
+![Kafka](https://img.shields.io/badge/Kafka-Real--time-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![MinIO](https://img.shields.io/badge/MinIO-Object_Storage-C72E49?style=for-the-badge&logo=minio&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+
+**Patterns**
+
+![Schema Validation](https://img.shields.io/badge/Pattern-Schema_Validation-FF6B6B?style=flat-square)
+![Dead Letter Queue](https://img.shields.io/badge/Pattern-DLQ-4ECDC4?style=flat-square)
+![Data Quality](https://img.shields.io/badge/Pattern-Data_Quality-95E1D3?style=flat-square)
+![Real-time Processing](https://img.shields.io/badge/Pattern-Real--time-F38181?style=flat-square)
+
+</div>
+
+---
+
+## Visual Overview
+
+### Dashboard
+
+<p align="center">
+  <img src="./docs/assets/dashboard-demo.png" alt="DataQuarantine Dashboard" width="800"/>
+</p>
+
+*Real-time data quality monitoring with glassmorphism design*
+
+### Architecture Flow
+
+<p align="center">
+  <img src="./docs/assets/architecture-flow.png" alt="Data Flow Architecture" width="700"/>
+</p>
+
+*Intelligent routing: Valid data flows to clean topic, invalid data quarantined to DLQ*
+
+---
+
+## Overview
 
 **DataQuarantine** is a production-ready streaming schema enforcement system that validates, quarantines, and monitors data quality in real-time streaming pipelines. It acts as a data quality gateway, ensuring only valid data flows through your pipeline while capturing and managing invalid records for review and reprocessing.
 
@@ -27,7 +69,7 @@ A **real-time validation gateway** that:
 
 ---
 
-## 🚀 Quick Start (3 Steps)
+## Quick Start (3 Steps)
 
 ### Step 1: Start All Services
 ```bash
