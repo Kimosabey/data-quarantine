@@ -671,16 +671,36 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 ---
 
-## 📞 Support & Contact
+## 📚 Documentation Structure
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/dataquarantine/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/dataquarantine/discussions)
-- **Email**: your.email@example.com
+| Document                | Purpose                                              |
+| ----------------------- | ---------------------------------------------------- |
+| `README.md`             | **You are here** - Complete overview and quick start |
+| [`docs/QUICKSTART.md`](./docs/QUICKSTART.md) | Detailed setup guide with troubleshooting |
+| [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | Deep dive into system architecture |
+| [`docs/INTERVIEW.md`](./docs/INTERVIEW.md) | Technical Q&A and design decisions |
+
+### Architecture Diagrams
+
+![System Architecture](./docs/assets/architecture.png)
+
+![Message Flow](./docs/assets/message-flow.png)
+
+![Technology Stack](./docs/assets/tech-stack.png)
+
+---
+
+## 👤 Author
+
+**Harshan Aiyappa**
+
+- GitHub: [@Kimosabey](https://github.com/Kimosabey)
 
 ---
 
 **Built with ❤️ for Data Quality and Stream Processing**
 
 **Document Version**: 2.0  
-**Last Updated**: December 2025  
+**Last Updated**: January 2026  
 **Status**: ✅ Active Development
+
